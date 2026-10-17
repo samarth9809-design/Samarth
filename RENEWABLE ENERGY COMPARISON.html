@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EcoCompare - Renewable Energy Comparison Tool</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
+
+    <!-- Header -->
+    <header class="bg-emerald-700 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-6 flex flex-col md:flex-row justify-between items-center">
+            <div class="flex items-center space-x-3 mb-4 md:mb-0">
+                <div class="bg-emerald-600 p-3 rounded-xl shadow-inner">
+                    <i class="fa-solid fa-leaf text-2xl text-emerald-200"></i>
+                </div>
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight">EcoCompare</h1>
+                    <p class="text-emerald-100 text-sm">Renewable Energy Cost, Output & Payback Analysis</p>
+                </div>
+            </div>
+            <nav class="flex space-x-6 text-sm font-medium">
+                <a href="#comparator" class="hover:text-emerald-200 transition">Comparator</a>
+                <a href="#calculator" class="hover:text-emerald-200 transition">ROI Calculator</a>
+                <a href="#analytics" class="hover:text-emerald-200 transition">Analytics</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto px-4 py-8 flex-grow space-y-12 w-full">
+
+        <!-- Hero Intro Section -->
+        <section class="bg-gradient-to-r from-emerald-600 to-teal-700 rounded-3xl p-8 text-white shadow-xl flex flex-col md:flex-row justify-between items-center">
+            <div class="space-y-4 max-w-2xl mb-6 md:mb-0">
+                <span class="bg-emerald-500/50 text-emerald-100 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider">Sustainable Future</span>
+                <h2 class="text-3xl md:text-4xl font-extrabold tracking-tight">Make Informed Green Energy Investments</h2>
+                <p class="text-emerald-50 text-base">Compare installation costs, energy outputs, and payback periods across major renewable energy sources in Indian Rupees (₹).</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-center">
+                <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20">
+                    <p class="text-3xl font-black text-emerald-200">5</p>
+                    <p class="text-xs text-emerald-100 uppercase tracking-wider mt-1">Energy Types</p>
+                </div>
+                <div class="bg-white/10 backdrop-blur-md p-4 rounded-2xl border border-white/20">
+                    <p class="text-3xl font-black text-emerald-200">100%</p>
+                    <p class="text-xs text-emerald-100 uppercase tracking-wider mt-1">Eco-Friendly</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Comparator Tool -->
+        <section id="comparator" class="space-y-6">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+                <div>
+                    <h3 class="text-2xl font-bold text-slate-900">Energy Source Matrix</h3>
+                    <p class="text-slate-500 text-sm">Compare upfront capital costs, annual energy generation, and estimated payback time.</p>
+                </div>
+                <div class="flex items-center space-x-2 bg-white p-1.5 rounded-xl shadow-sm border border-slate-200">
+                    <span class="text-xs font-semibold text-slate-500 px-2">Sort by:</span>
+                    <button onclick="sortData('cost')" class="px-3 py-1.5 text-xs font-medium bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition">Cost</button>
+                    <button onclick="sortData('output')" class="px-3 py-1.5 text-xs font-medium bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition">Output</button>
+                    <button onclick="sortData('payback')" class="px-3 py-1.5 text-xs font-medium bg-slate-100 hover:bg-emerald-50 hover:text-emerald-700 rounded-lg transition">Payback</button>
+                </div>
+            </div>
+
+            <!-- Cards / Grid Display -->
+            <div id="energy-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Section: Interactive ROI Calculator -->
+        <section id="calculator" class="bg-white rounded-3xl p-8 shadow-sm border border-slate-200 space-y-6">
+            <div>
+                <h3 class="text-2xl font-bold text-slate-900">Custom ROI & Payback Calculator</h3>
+                <p class="text-slate-500 text-sm">Estimate your savings and payback period based on your energy consumption and preferred source.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-center">
+                <div class="space-y-4 lg:col-span-1">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">Select Energy Source</label>
+                        <select id="calc-source" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">Monthly Electricity Bill (₹)</label>
+                        <input type="number" id="calc-bill" value="5000" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase tracking-wider text-slate-600 mb-2">System Size / Capacity (kW)</label>
+                        <input type="number" id="calc-kw" value="5" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-4 py-3 text-sm focus:ring-2 focus:ring-emerald-500 focus:outline-none" />
+                    </div>
+                    <button onclick="calculateROI()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl shadow-md transition">Calculate Projections</button>
+                </div>
+
+                <div class="lg:col-span-2 bg-emerald-50/50 rounded-2xl p-6 border border-emerald-100 grid grid-cols-1 sm:grid-cols-3 gap-6 text-center">
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-emerald-100 flex flex-col justify-center">
+                        <span class="text-xs font-semibold text-slate-400 uppercase">Estimated Setup Cost</span>
+                        <p id="res-cost" class="text-2xl font-bold text-slate-800 mt-2">₹0</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-emerald-100 flex flex-col justify-center">
+                        <span class="text-xs font-semibold text-slate-400 uppercase">Annual Savings</span>
+                        <p id="res-savings" class="text-2xl font-bold text-emerald-600 mt-2">₹0</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow-sm border border-emerald-100 flex flex-col justify-center">
+                        <span class="text-xs font-semibold text-slate-400 uppercase">Payback Period</span>
+                        <p id="res-payback" class="text-2xl font-bold text-teal-600 mt-2">0 Years</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section: Analytics Charts -->
+        <section id="analytics" class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                <h4 class="text-lg font-bold text-slate-900 mb-4">Initial Cost per kW (₹)</h4>
+                <div class="relative h-72">
+                    <canvas id="costOutputChart"></canvas>
+                </div>
+            </div>
+            <div class="bg-white rounded-3xl p-6 shadow-sm border border-slate-200">
+                <h4 class="text-lg font-bold text-slate-900 mb-4">Payback Period Comparison (Years)</h4>
+                <div class="relative h-72">
+                    <canvas id="paybackChart"></canvas>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-8 mt-12 text-center text-sm">
+        <p>&copy; 2026 EcoCompare. Sustainable energy options for a cleaner planet.</p>
+    </footer>
+
+    <!-- JavaScript Application Logic -->
+    <script>
+        // Predefined Renewable Energy Data (Costs converted to INR ₹)
+        const energyData = [
+            {
+                id: 'solar',
+                name: 'Solar PV Panels',
+                icon: 'fa-sun',
+                costPerKw: 55000,
+                annualOutputKw: 1400,
+                paybackYears: 4.5,
+                efficiency: '18% - 22%',
+                lifespan: '25-30 Years',
+                description: 'Converts sunlight directly into electricity via photovoltaic cells. Highly popular for Indian residential rooftops with high solar irradiance.',
+                color: '#f59e0b'
+            },
+            {
+                id: 'wind',
+                name: 'Small Wind Turbine',
+                icon: 'fa-wind',
+                costPerKw: 75000,
+                annualOutputKw: 1850,
+                paybackYears: 6.5,
+                efficiency: '30% - 45%',
+                lifespan: '20-25 Years',
+                description: 'Harnesses kinetic energy from wind currents using aerodynamic blades. Ideal for coastal or windy open regions.',
+                color: '#0ea5e9'
+            },
+            {
+                id: 'hydro',
+                name: 'Micro-Hydro System',
+                icon: 'fa-water',
+                costPerKw: 90000,
+                annualOutputKw: 2200,
+                paybackYears: 5.5,
+                efficiency: '70% - 90%',
+                lifespan: '30+ Years',
+                description: 'Generates power from continuous water streams. Excellent for hilly areas with natural water flows.',
+                color: '#10b981'
+            },
+            {
+                id: 'geothermal',
+                name: 'Geothermal Heat Pump',
+                icon: 'fa-volcano',
+                costPerKw: 120000,
+                annualOutputKw: 1600,
+                paybackYears: 8.0,
+                efficiency: '300%+',
+                lifespan: '25-50 Years',
+                description: 'Utilizes stable ground temperatures for space heating, cooling, and electrical generation.',
+                color: '#ef4444'
+            },
+            {
+                id: 'biomass',
+                name: 'Biomass Generator',
+                icon: 'fa-seedling',
+                costPerKw: 85000,
+                annualOutputKw: 2000,
+                paybackYears: 6.0,
+                efficiency: '20% - 30%',
+                lifespan: '20 Years',
+                description: 'Uses organic agricultural waste to generate continuous baseload power.',
+                color: '#84cc16'
+            }
+        ];
+
+        // Format Currency in Indian Numbering System (e.g. ₹55,000)
+        function formatINR(amount) {
+            return '₹' + amount.toLocaleString('en-IN');
+        }
+
+        // Render Energy Grid Cards
+        function renderGrid(dataToRender) {
+            const grid = document.getElementById('energy-grid');
+            grid.innerHTML = '';
+
+            dataToRender.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'bg-white rounded-3xl p-6 shadow-sm border border-slate-200 flex flex-col justify-between hover:shadow-md transition';
+                card.innerHTML = `
+                    <div>
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="p-3 rounded-2xl bg-slate-100 text-emerald-700">
+                                <i class="fa-solid ${item.icon} text-xl"></i>
+                            </div>
+                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700">${item.lifespan}</span>
+                        </div>
+                        <h4 class="text-xl font-bold text-slate-900 mb-2">${item.name}</h4>
+                        <p class="text-slate-500 text-sm mb-6">${item.description}</p>
+                    </div>
+                    <div class="space-y-3 border-t border-slate-100 pt-4">
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Est. Cost / kW:</span>
+                            <span class="font-bold text-slate-800">${formatINR(item.costPerKw)}</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Annual Output:</span>
+                            <span class="font-bold text-emerald-600">${item.annualOutputKw.toLocaleString('en-IN')} kWh</span>
+                        </div>
+                        <div class="flex justify-between text-sm">
+                            <span class="text-slate-500">Payback Period:</span>
+                            <span class="font-bold text-teal-600">${item.paybackYears} Years</span>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Populate Calculator Dropdown
+        function populateCalculatorDropdown() {
+            const select = document.getElementById('calc-source');
+            select.innerHTML = '';
+            energyData.forEach(item => {
+                const opt = document.createElement('option');
+                opt.value = item.id;
+                opt.textContent = item.name;
+                select.appendChild(opt);
+            });
+        }
+
+        // Calculate ROI Logic
+        function calculateROI() {
+            const sourceId = document.getElementById('calc-source').value;
+            const monthlyBill = parseFloat(document.getElementById('calc-bill').value) || 0;
+            const kwSize = parseFloat(document.getElementById('calc-kw').value) || 0;
+
+            const selected = energyData.find(i => i.id === sourceId);
+            const totalCost = selected.costPerKw * kwSize;
+            const annualSavings = monthlyBill * 12 * 0.85; // assuming 85% offset
+            const calculatedPayback = annualSavings > 0 ? (totalCost / annualSavings).toFixed(1) : selected.paybackYears;
+
+            document.getElementById('res-cost').textContent = formatINR(totalCost);
+            document.getElementById('res-savings').textContent = formatINR(Math.round(annualSavings));
+            document.getElementById('res-payback').textContent = `${calculatedPayback} Years`;
+        }
+
+        // Sorting functionality
+        function sortData(criteria) {
+            let sorted = [...energyData];
+            if (criteria === 'cost') sorted.sort((a, b) => a.costPerKw - b.costPerKw);
+            if (criteria === 'output') sorted.sort((a, b) => b.annualOutputKw - a.annualOutputKw);
+            if (criteria === 'payback') sorted.sort((a, b) => a.paybackYears - b.paybackYears);
+            renderGrid(sorted);
+        }
+
+        // Initialize Charts
+        function initCharts() {
+            const labels = energyData.map(i => i.name);
+            const costs = energyData.map(i => i.costPerKw);
+            const paybacks = energyData.map(i => i.paybackYears);
+
+            // Cost per kW Chart
+            const ctx1 = document.getElementById('costOutputChart').getContext('2d');
+            new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Cost per kW (₹)',
+                        data: costs,
+                        backgroundColor: '#10b981',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { 
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return 'Cost: ' + formatINR(context.raw);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Payback Chart
+            const ctx2 = document.getElementById('paybackChart').getContext('2d');
+            new Chart(ctx2, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Payback (Years)',
+                        data: paybacks,
+                        borderColor: '#0ea5e9',
+                        backgroundColor: 'rgba(14, 165, 233, 0.1)',
+                        fill: true,
+                        tension: 0.3,
+                        pointRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        }
+
+        // Run on load
+        window.onload = () => {
+            renderGrid(energyData);
+            populateCalculatorDropdown();
+            calculateROI();
+            initCharts();
+        };
+    </script>
+</body>
+</html>
